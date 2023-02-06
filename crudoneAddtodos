@@ -1,0 +1,79 @@
+import { StyleSheet, Text, View, Button,FlatList } from 'react-native'
+import React from 'react'
+
+
+
+const Testing = () => {
+  const [todos, setTodos] = React.useState([
+    {id: 1, text: 'Todo 1'},
+    {id: 2, text: 'Todo 2'},
+    {id: 3, text: 'Todo 3'}
+  ]);
+
+  const addTodo = text => {
+    setTodos([...todos, {id: todos.length+1, text}])
+  }
+
+
+  //this will error when Encountered two children with the same key, `4`. 
+  //Keys should be unique so that components maintain their identity across updates.
+  // const updateTodo = (id, text) => {
+  //   setTodos(
+  //     todos.map(todo => {
+  //       if(todo.id === id){
+  //         todo.text = text
+  //       }
+  //       return todo;  
+  //     })  
+  //     );
+  // };
+
+  const updateTodo = (id, text) => {
+    setTodos(prevTodos => prevTodos.map(todo => {
+      if (todo.id === id) {
+        return { ...todo, text };
+      }
+      return todo;
+    }));
+  };
+
+  const remove = id => {
+    setTodos(todos.filter(todo => todo.id !== id))
+  }
+
+
+  return (
+    <View style={styles.container}>    
+      {todos.map(todo => (
+        <View key={todo.id} style={styles.todoContainer}>
+          <Text>{todo.text}</Text>
+          <View style={{flexDirection: 'row'}}>
+            <Button title='Update' onPress={() => updateTodo(todo.id, 'update todo')}/>
+            <Button title='Remove' onPress={() => remove(todo.id)}/>
+          </View>
+        </View>
+      ))}
+      <Button title='Add Todos' onPress={() => addTodo('New todo')}/>
+    </View>
+  )
+}
+
+export default Testing
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    //backgroundColor: 'red'
+  },
+  todoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '80%',
+    padding: 10,
+    marginVertical: 10,
+    backgroundColor: 'whitesmoke'
+  },
+})
